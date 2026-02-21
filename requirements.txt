@@ -1,13 +1,12 @@
-fastapi
-uvicorn
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
 jinja2
 python-multipart
-starlette
-deepface
-tf-keras
+deepface==0.0.79
 opencv-python
 numpy
 python-dotenv
 itsdangerous
 httpx
 twilio
+tensorflow==2.15.0
