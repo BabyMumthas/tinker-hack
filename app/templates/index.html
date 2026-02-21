@@ -1,697 +1,268 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>National Missing Person Support System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --neon-cyan: #00f2ff;
-            --dark-bg: #000a0a;
-            --dark-teal: #004d4d;
-            --glow-cyan: rgba(0, 242, 255, 0.4);
-        }
+{% block title %}National Missing Person Support System — Home{% endblock %}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--neon-cyan);
-            background-image:
-                linear-gradient(rgba(0, 77, 77, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 77, 77, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
+{% block content %}
+<!-- HERO SECTION -->
+<section class="relative h-screen overflow-hidden flex items-center justify-center">
+    <!-- Background Video -->
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-70">
+        <source src="/static/videos/tech-bg.mp4" type="video/mp4">
+    </video>
 
-        .heading-font {
-            font-family: 'Playfair Display', serif;
-            letter-spacing: 1px;
-        }
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#000a0a] z-5"></div>
 
-        .cyber-card {
-            background: rgba(0, 26, 26, 0.8);
-            border: 1px solid var(--dark-teal);
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .cyber-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .cyber-button {
-            background: transparent;
-            color: var(--neon-cyan);
-            border: 1px solid var(--neon-cyan);
-            box-shadow: 0 0 10px var(--glow-cyan);
-            transition: all 0.3s ease;
-        }
-
-        .cyber-button:hover {
-            background: var(--neon-cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-cyan);
-        }
-
-        .neon-text {
-            text-shadow: 0 0 10px var(--glow-cyan);
-        }
-    </style>
-</head>
-
-<body class="text-cyan-400">
-
-    <!-- NAVBAR -->
-    <nav class="border-b border-cyan-900 bg-black/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="w-full mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div
-                    class="border border-cyan-500 text-cyan-500 w-10 h-10 flex items-center justify-center rounded-md font-bold shadow-[0_0_10px_rgba(0,242,255,0.3)]">
-                    NM
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg uppercase tracking-wider neon-text">National Missing Person</h1>
-                    <p class="text-[10px] text-cyan-600 uppercase tracking-[0.2em]">Support System</p>
-                </div>
-            </div>
-
-            <div class="hidden md:flex space-x-8 text-xs font-bold uppercase tracking-widest">
-                <a href="#" class="hover:text-white transition">Home</a>
-                <a href="#about" class="hover:text-white transition">About</a>
-                <a href="/report" class="hover:text-white transition">Report Case</a>
-                <a href="/officer-login" class="text-cyan-300 hover:text-white transition">Officer Access</a>
-            </div>
+    <div class="w-full mx-auto px-6 text-center relative z-10">
+        <div
+            class="inline-block px-3 py-1 border border-cyan-800 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] mb-6 animate-pulse text-cyan-500 bg-black/40">
+            • System Online • Active Monitoring
         </div>
-    </nav>
+        <h2 class="text-5xl md:text-7xl font-extrabold leading-tight neon-text mb-8 tracking-tighter uppercase">
+            AI-POWERED <br><span class="text-white">VISUAL RECOVERY</span>
+        </h2>
+        <p class="mt-6 text-lg text-cyan-300/80 mx-auto font-light leading-relaxed max-w-2xl">
+            Revolutionizing missing person recovery through structured reporting
+            and advanced facial embedding analysis.
+        </p>
 
-    <!-- HERO SECTION -->
-    <section class="relative h-screen overflow-hidden flex items-center justify-center">
-        <!-- Background Video -->
-        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-70">
-            <source src="/static/videos/tech-bg.mp4" type="video/mp4">
-            <!-- Fallback if video not found -->
-        </video>
-
-        <!-- Lightened Overlay for Brighter Video -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#000a0a] z-5"></div>
-
-        <div class="w-full mx-auto px-6 text-center relative z-10">
-            <div
-                class="inline-block px-3 py-1 border border-cyan-800 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] mb-6 animate-pulse text-cyan-500 bg-black/40">
-                • System Online • Active Monitoring
-            </div>
-            <h2 class="heading-font text-5xl md:text-7xl font-extrabold leading-tight neon-text mb-8">
-                AI-POWERED <br><span class="text-white">VISUAL RECOVERY</span>
-            </h2>
-            <p class="mt-6 text-lg text-cyan-300/80 mx-auto font-light leading-relaxed">
-                Revolutionizing missing person recovery through structured reporting
-                and advanced facial embedding analysis.
-            </p>
-
-            <div
-                class="mt-12 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
-                <a href="/report"
-                    class="cyber-button px-8 py-4 rounded-md font-bold text-sm uppercase tracking-widest min-w-[240px]">
-                    Report Missing Person
-                </a>
-                <a href="/officer-login"
-                    class="text-cyan-500 hover:text-white px-8 py-4 rounded-md font-bold text-sm uppercase tracking-widest min-w-[240px] transition">
-                    Officer Login →
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- MANDATE SECTION -->
-    <section id="about" class="py-20 border-y border-cyan-900/30">
-        <div class="w-full mx-auto px-6">
-            <h3 class="heading-font text-2xl font-bold text-center mb-10 tracking-widest uppercase text-white">
-                Core Mandate
-            </h3>
-            <p class="text-center w-full mx-auto text-cyan-400/70 leading-relaxed font-light">
-                This platform serves as the central hub for missing person coordination.
-                By leveraging standardized data submission and AI-assisted comparison, we significantly reduce
-                response times and manual overhead.
-            </p>
-        </div>
-    </section>
-
-    <!-- SYSTEM CAPABILITIES -->
-    <section class="py-24">
-        <div class="w-full mx-auto px-6">
-            <h3 class="heading-font text-2xl font-bold text-center mb-16 tracking-widest uppercase text-white">
-                System Capabilities
-            </h3>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="cyber-card p-8 rounded-lg">
-                    <div class="w-12 h-1 w-full bg-cyan-500 mb-6 shadow-[0_0_10px_rgba(0,242,255,0.5)]"></div>
-                    <h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-white">Face Comparison Engine</h4>
-                    <p class="text-cyan-400/60 text-xs leading-relaxed">
-                        Authorized personnel utilize automated facial embedding matching to identify potential leads
-                        across national datasets.
-                    </p>
-                </div>
-
-                <div class="cyber-card p-8 rounded-lg">
-                    <div class="w-12 h-1 w-full bg-cyan-700 mb-6"></div>
-                    <h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-white">Structured Reporting</h4>
-                    <p class="text-cyan-400/60 text-xs leading-relaxed">
-                        Standardized evidence collection ensures all relevant identifiers are captured for high-fidelity
-                        matching.
-                    </p>
-                </div>
-
-                <div class="cyber-card p-8 rounded-lg">
-                    <div class="w-12 h-1 w-full bg-cyan-900 mb-6"></div>
-                    <h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-white">Alert Workflow</h4>
-                    <p class="text-cyan-400/60 text-xs leading-relaxed">
-                        Instant notification protocols trigger when potential visual identity matches are detected by
-                        the oversight engine.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PUBLIC TRUST SECTION (Scrolling Carousel) -->
-    <section class="py-24 bg-black/40 overflow-hidden">
-        <div class="w-full mx-auto px-6 mb-12">
-            <h3 class="heading-font text-2xl font-bold text-center tracking-widest uppercase text-white">
-                Operational Trust
-            </h3>
-        </div>
-
-        <!-- Scrolling Container -->
-        <div class="relative flex overflow-hidden">
-            <div class="flex animate-scroll whitespace-nowrap py-10">
-                <!-- First Set -->
-                <div class="flex space-x-8 px-4">
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Parent Representative"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "The efficiency of the structured system provided immediate clarity during a critical crisis
-                            period."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Case
-                            Representative</p>
-                    </div>
-
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Systems Personnel"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "Facial embedding technology dramatically reduces verification cycles for our response
-                            teams."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Systems
-                            Personnel</p>
-                    </div>
-
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Oversight Coordinator"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "Data responsibility is core to the workflow, ensuring privacy while achieving mission
-                            objectives."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Oversight
-                            Coordinator</p>
-                    </div>
-                </div>
-
-                <!-- Duplicated Set for Seamless Loop -->
-                <div class="flex space-x-8 px-4">
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Parent Representative"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "The efficiency of the structured system provided immediate clarity during a critical crisis
-                            period."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Case
-                            Representative</p>
-                    </div>
-
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Systems Personnel"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "Facial embedding technology dramatically reduces verification cycles for our response
-                            teams."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Systems
-                            Personnel</p>
-                    </div>
-
-                    <div
-                        class="w-[350px] flex-shrink-0 border-l border-cyan-800 p-6 cyber-card rounded-lg whitespace-normal">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
-                            alt="Oversight Coordinator"
-                            class="w-16 h-16 rounded-full border-2 border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.5)] mb-4 object-cover">
-                        <p class="text-cyan-400/80 italic text-sm font-light">
-                            "Data responsibility is core to the workflow, ensuring privacy while achieving mission
-                            objectives."
-                        </p>
-                        <p class="mt-4 text-[10px] font-bold text-cyan-600 uppercase tracking-widest">— Oversight
-                            Coordinator</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <style>
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .animate-scroll {
-            animation: scroll 30s linear infinite;
-        }
-
-        /* Pause animation on hover */
-        .animate-scroll:hover {
-            animation-play-state: paused;
-        }
-    </style>
-
-    <!-- OPERATIONAL OVERVIEW -->
-    <section class="py-24 border-t border-cyan-900/40">
-        <div class="w-full mx-auto px-6 text-center">
-            <h3 class="heading-font text-2xl font-bold mb-16 tracking-widest uppercase text-white">
-                System Status
-            </h3>
-
-            <div class="grid md:grid-cols-4 gap-10">
-                <div>
-                    <p class="text-4xl font-extrabold text-white neon-text">14</p>
-                    <p class="text-[10px] text-cyan-600 font-bold uppercase mt-2 tracking-widest">Active Reports</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-extrabold text-white neon-text">09</p>
-                    <p class="text-[10px] text-cyan-600 font-bold uppercase mt-2 tracking-widest">Processing</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-extrabold text-white neon-text">03</p>
-                    <p class="text-[10px] text-cyan-600 font-bold uppercase mt-2 tracking-widest">AI Detections</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-extrabold text-white neon-text">05</p>
-                    <p class="text-[10px] text-cyan-600 font-bold uppercase mt-2 tracking-widest">Alerts Issued</p>
-                </div>
-            </div>
-
-            <p class="text-[9px] text-cyan-900 mt-12 uppercase tracking-[0.4em]">
-                • REAL-TIME DIAGNOSTIC DATA — SIMULATED FOR DEMO •
-            </p>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="border-t border-cyan-900/50 bg-black py-12 text-center">
-        <div class="w-full mx-auto px-6">
-            <p class="text-[10px] text-cyan-700 uppercase tracking-[0.5em] font-bold">
-                National Missing Person Support System — v2.0 AI PROTOTYPE
-            </p>
-        </div>
-    </footer>
-
-    <!-- CHATBOT WIDGET -->
-    <style>
-        #chatbot-toggle {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #000a0a;
-            color: #00f2ff;
-            border: 2px solid #00f2ff;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        #chatbot-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.7);
-        }
-
-        #chatbot-toggle svg {
-            width: 28px;
-            height: 28px;
-            transition: transform 0.3s ease;
-        }
-
-        #chatbot-toggle.open svg {
-            transform: rotate(90deg);
-        }
-
-        #chatbot-panel {
-            position: fixed;
-            bottom: 100px;
-            right: 28px;
-            width: 380px;
-            max-height: 520px;
-            background: #000a0a;
-            border-radius: 12px;
-            border: 1px solid #004d4d;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            z-index: 9998;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-            pointer-events: none;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        #chatbot-panel.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-        }
-
-        #chatbot-header {
-            background: linear-gradient(135deg, #001a1a, #004d4d);
-            color: #00f2ff;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid #00f2ff;
-        }
-
-        #chatbot-header .avatar {
-            width: 36px;
-            height: 36px;
-            background: rgba(0, 242, 255, 0.1);
-            border: 1px solid #00f2ff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        #chatbot-header .info h4 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        #chatbot-header .info p {
-            margin: 0;
-            font-size: 10px;
-            opacity: 0.8;
-            color: #00f2ff;
-        }
-
-        #chatbot-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 340px;
-            min-height: 200px;
-            background: #000a0a;
-            background-image: radial-gradient(#004d4d 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-        }
-
-        #chatbot-messages::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        #chatbot-messages::-webkit-scrollbar-thumb {
-            background: #004d4d;
-            border-radius: 4px;
-        }
-
-        .chat-msg {
-            max-width: 82%;
-            padding: 10px 14px;
-            border-radius: 4px;
-            font-size: 13px;
-            line-height: 1.5;
-            font-family: 'Courier New', Courier, monospace;
-            animation: fadeInMsg 0.3s ease;
-        }
-
-        @keyframes fadeInMsg {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .chat-msg.user {
-            align-self: flex-end;
-            background: rgba(0, 242, 255, 0.1);
-            color: #00f2ff;
-            border: 1px solid #00f2ff;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
-        }
-
-        .chat-msg.bot {
-            align-self: flex-start;
-            background: rgba(0, 77, 77, 0.2);
-            color: #00f2ff;
-            border: 1px solid #004d4d;
-        }
-
-        .typing-indicator {
-            align-self: flex-start;
-            display: flex;
-            gap: 4px;
-            padding: 12px 16px;
-            background: #000a0a;
-            border: 1px solid #004d4d;
-            border-radius: 4px;
-        }
-
-        .typing-indicator span {
-            width: 7px;
-            height: 7px;
-            background: #00f2ff;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        #chatbot-input-area {
-            display: flex;
-            align-items: center;
-            padding: 12px 14px;
-            border-top: 1px solid #004d4d;
-            background: #000a0a;
-            gap: 8px;
-        }
-
-        #chatbot-input {
-            flex: 1;
-            background: #001a1a;
-            color: #00f2ff;
-            border: 1px solid #004d4d;
-            border-radius: 4px;
-            padding: 10px 16px;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        #chatbot-input:focus {
-            border-color: #00f2ff;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
-        }
-
-        #chatbot-send {
-            width: 38px;
-            height: 38px;
-            border-radius: 4px;
-            background: #000a0a;
-            color: #00f2ff;
-            border: 1px solid #00f2ff;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            flex-shrink: 0;
-        }
-
-        #chatbot-send:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-        }
-
-        #chatbot-send:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 440px) {
-            #chatbot-panel {
-                width: calc(100vw - 24px);
-                right: 12px;
-                bottom: 90px;
-            }
-        }
-    </style>
-
-    <!-- Chat Toggle Button -->
-    <button id="chatbot-toggle" aria-label="Open chatbot">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-    </button>
-
-    <!-- Chat Panel -->
-    <div id="chatbot-panel">
-        <div id="chatbot-header">
-            <div class="avatar">🤖</div>
-            <div class="info">
-                <h4>Support Assistant</h4>
-                <p>Powered by Gemini AI</p>
-            </div>
-        </div>
-        <div id="chatbot-messages">
-            <div class="chat-msg bot">
-                👋 Hello! I'm the Missing Person Support Assistant. How can I help you today?
-            </div>
-        </div>
-        <div id="chatbot-input-area">
-            <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off">
-            <button id="chatbot-send" aria-label="Send message">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path
-                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
-                </svg>
-            </button>
+        <div class="mt-12 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6">
+            <a href="/report"
+                class="cyber-button px-10 py-4 rounded-md font-bold text-sm uppercase tracking-widest min-w-[260px]">
+                Report Missing Person
+            </a>
+            <a href="/officer-login"
+                class="text-cyan-500 hover:text-white px-10 py-4 rounded-md font-bold text-sm uppercase tracking-widest min-w-[260px] transition group">
+                Officer Access <span class="inline-block transition-transform group-hover:translate-x-2">→</span>
+            </a>
         </div>
     </div>
+</section>
 
-    <script>
-        (function () {
-            const toggle = document.getElementById('chatbot-toggle');
-            const panel = document.getElementById('chatbot-panel');
-            const input = document.getElementById('chatbot-input');
-            const sendBtn = document.getElementById('chatbot-send');
-            const msgs = document.getElementById('chatbot-messages');
-            let isOpen = false;
+<!-- MANDATE SECTION -->
+<section id="about" class="py-24 border-y border-cyan-900/30">
+    <div class="w-full mx-auto px-6 text-center">
+        <h3 class="text-2xl font-bold tracking-[0.5em] uppercase text-white mb-12">Core Mandate</h3>
+        <p class="max-w-4xl mx-auto text-cyan-400/70 leading-relaxed font-light text-lg">
+            This platform serves as the central hub for missing person coordination.
+            By leveraging standardized data submission and AI-assisted comparison, we significantly reduce
+            response times and manual overhead.
+        </p>
+    </div>
+</section>
 
-            toggle.addEventListener('click', () => {
-                isOpen = !isOpen;
-                panel.classList.toggle('visible', isOpen);
-                toggle.classList.toggle('open', isOpen);
-                if (isOpen) input.focus();
-            });
+<!-- SYSTEM CAPABILITIES -->
+<section class="py-32">
+    <div class="w-full mx-auto px-6">
+        <h3 class="text-2xl font-bold text-center mb-20 tracking-[0.5em] uppercase text-white">System Capabilities</h3>
 
-            function addMessage(text, sender) {
-                const div = document.createElement('div');
-                div.className = `chat-msg ${sender}`;
-                div.textContent = text;
-                msgs.appendChild(div);
-                msgs.scrollTop = msgs.scrollHeight;
-            }
+        <div class="grid md:grid-cols-3 gap-10">
+            <div class="cyber-card p-10 rounded-lg">
+                <div class="w-full h-1 bg-cyan-500 mb-8 shadow-[0_0_15px_rgba(0,242,255,0.6)]"></div>
+                <h4 class="font-bold text-lg mb-4 uppercase tracking-widest text-white">Face Comparison Engine</h4>
+                <p class="text-cyan-400/60 text-sm leading-relaxed">
+                    Authorized personnel utilize automated facial embedding matching to identify potential leads
+                    across national datasets.
+                </p>
+            </div>
 
-            function showTyping() {
-                const el = document.createElement('div');
-                el.className = 'typing-indicator';
-                el.id = 'typing';
-                el.innerHTML = '<span></span><span></span><span></span>';
-                msgs.appendChild(el);
-                msgs.scrollTop = msgs.scrollHeight;
-            }
+            <div class="cyber-card p-10 rounded-lg">
+                <div class="w-full h-1 bg-cyan-700 mb-8 shadow-[0_0_10px_rgba(0,100,100,0.4)]"></div>
+                <h4 class="font-bold text-lg mb-4 uppercase tracking-widest text-white">Structured Reporting</h4>
+                <p class="text-cyan-400/60 text-sm leading-relaxed">
+                    Standardized evidence collection ensures all relevant identifiers are captured for high-fidelity
+                    matching.
+                </p>
+            </div>
 
-            function removeTyping() {
-                const el = document.getElementById('typing');
-                if (el) el.remove();
-            }
+            <div class="cyber-card p-10 rounded-lg">
+                <div class="w-full h-1 bg-cyan-900 mb-8"></div>
+                <h4 class="font-bold text-lg mb-4 uppercase tracking-widest text-white">Alert Workflow</h4>
+                <p class="text-cyan-400/60 text-sm leading-relaxed">
+                    Instant notification protocols trigger when potential visual identity matches are detected by
+                    the oversight engine.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
-            async function sendMessage() {
-                const text = input.value.trim();
-                if (!text) return;
+<!-- PUBLIC TRUST SECTION (Scrolling Carousel) -->
+<section class="py-32 bg-black/40 overflow-hidden border-y border-cyan-900/20">
+    <div class="w-full mx-auto px-6 mb-16">
+        <h3 class="text-2xl font-bold text-center tracking-[0.5em] uppercase text-white">Operational Trust</h3>
+    </div>
 
-                addMessage(text, 'user');
-                input.value = '';
-                sendBtn.disabled = true;
-                showTyping();
+    <!-- Scrolling Container -->
+    <div class="relative flex overflow-hidden">
+        <div class="flex animate-scroll whitespace-nowrap py-10">
+            <!-- First Set -->
+            <div class="flex space-x-12 px-6">
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Parent Representative"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Case Representative
+                            </p>
+                            <p class="text-white font-bold uppercase tracking-tighter">Sector 7 Personnel</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "The efficiency of the structured system provided immediate clarity during a critical crisis
+                        period. AI identification was the turning point."
+                    </p>
+                </div>
 
-                try {
-                    const res = await fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: text })
-                    });
-                    const data = await res.json();
-                    removeTyping();
-                    addMessage(data.reply, 'bot');
-                } catch (err) {
-                    removeTyping();
-                    addMessage('Sorry, something went wrong. Please try again.', 'bot');
-                }
-                sendBtn.disabled = false;
-                input.focus();
-            }
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Systems Personnel"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Systems Personnel
+                            </p>
+                            <p class="text-white font-bold uppercase tracking-tighter">Cyber-Forensics Div</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "Facial embedding technology dramatically reduces verification cycles for our response
+                        teams. We now match identities in seconds, not weeks."
+                    </p>
+                </div>
 
-            sendBtn.addEventListener('click', sendMessage);
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-        })();
-    </script>
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Oversight Coordinator"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Oversight
+                                Coordinator</p>
+                            <p class="text-white font-bold uppercase tracking-tighter">National Node Alpha</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "Data responsibility is core to the workflow, ensuring privacy while achieving mission
+                        objectives. A perfect balance of AI and empathy."
+                    </p>
+                </div>
+            </div>
 
-</body>
+            <!-- Duplicated Set for Seamless Loop -->
+            <div class="flex space-x-12 px-6">
+                <!-- (Same content as above for looping) -->
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Parent Representative"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Case Representative
+                            </p>
+                            <p class="text-white font-bold uppercase tracking-tighter">Sector 7 Personnel</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "The efficiency of the structured system provided immediate clarity during a critical crisis
+                        period. AI identification was the turning point."
+                    </p>
+                </div>
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Systems Personnel"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Systems Personnel
+                            </p>
+                            <p class="text-white font-bold uppercase tracking-tighter">Cyber-Forensics Div</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "Facial embedding technology dramatically reduces verification cycles for our response
+                        teams. We now match identities in seconds, not weeks."
+                    </p>
+                </div>
+                <div
+                    class="w-[450px] flex-shrink-0 border-l border-cyan-800 p-8 cyber-card rounded-lg whitespace-normal group">
+                    <div class="flex items-center gap-6 mb-6">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
+                            alt="Oversight Coordinator"
+                            class="w-20 h-20 rounded-full border-2 border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.4)] object-cover grayscale group-hover:grayscale-0 transition duration-500">
+                        <div>
+                            <p class="text-[10px] font-bold text-cyan-500 uppercase tracking-widest">Oversight
+                                Coordinator</p>
+                            <p class="text-white font-bold uppercase tracking-tighter">National Node Alpha</p>
+                        </div>
+                    </div>
+                    <p class="text-cyan-400/80 italic text-base font-light leading-relaxed">
+                        "Data responsibility is core to the workflow, ensuring privacy while achieving mission
+                        objectives. A perfect balance of AI and empathy."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-</html>
+<!-- SYSTEM STATUS -->
+<section class="py-32 border-t border-cyan-900/40">
+    <div class="w-full mx-auto px-6 text-center">
+        <h3 class="text-2xl font-bold mb-20 tracking-[0.5em] uppercase text-white">System Diagnostics</h3>
+
+        <div class="grid md:grid-cols-4 gap-12">
+            <div class="cyber-card p-6 rounded-lg">
+                <p class="text-5xl font-extrabold text-white neon-text mb-2">14</p>
+                <div class="w-8 h-1 bg-cyan-500 mx-auto mb-4"></div>
+                <p class="text-[10px] text-cyan-600 font-bold uppercase tracking-widest">Active Reports</p>
+            </div>
+            <div class="cyber-card p-6 rounded-lg">
+                <p class="text-5xl font-extrabold text-white neon-text mb-2">09</p>
+                <div class="w-8 h-1 bg-cyan-600 mx-auto mb-4"></div>
+                <p class="text-[10px] text-cyan-600 font-bold uppercase tracking-widest">Processing</p>
+            </div>
+            <div class="cyber-card p-6 rounded-lg">
+                <p class="text-5xl font-extrabold text-white neon-text mb-2">03</p>
+                <div class="w-8 h-1 bg-cyan-500 mx-auto mb-4 animate-pulse"></div>
+                <p class="text-[10px] text-cyan-600 font-bold uppercase tracking-widest">AI Detections</p>
+            </div>
+            <div class="cyber-card p-6 rounded-lg">
+                <p class="text-5xl font-extrabold text-white neon-text mb-2">05</p>
+                <div class="w-8 h-1 bg-cyan-700 mx-auto mb-4"></div>
+                <p class="text-[10px] text-cyan-600 font-bold uppercase tracking-widest">Alerts Issued</p>
+            </div>
+        </div>
+
+        <p class="text-[9px] text-cyan-900 mt-16 uppercase tracking-[0.5em] animate-pulse">
+            • REAL-TIME DIAGNOSIS CLUSTER • ACCESS LEVEL 4 •
+        </p>
+    </div>
+</section>
+
+<style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-scroll {
+        animation: scroll 40s linear infinite;
+    }
+
+    .animate-scroll:hover {
+        animation-play-state: paused;
+    }
+</style>
+{% endblock %}

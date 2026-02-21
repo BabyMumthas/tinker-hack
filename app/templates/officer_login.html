@@ -1,66 +1,67 @@
 {% extends "base.html" %}
 
-{% block title %}Officer Login — Missing Person AI{% endblock %}
+{% block title %}Officer Portal Login - National Missing Person Support System{% endblock %}
 
 {% block content %}
-<main class="flex-grow flex items-center justify-center py-20 px-6 w-full">
-    <div class="w-full flex flex-col items-center">
-        <div class="text-center mb-10 w-full">
-            <div
-                class="inline-block p-4 border border-cyan-500 rounded-full mb-6 shadow-[0_0_20px_rgba(0,242,255,0.2)]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-cyan-500" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+<section class="py-24 relative overflow-hidden flex items-center justify-center min-h-[80vh]">
+    <!-- Background Glow Effect -->
+    <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none">
+    </div>
+
+    <div class="max-w-md w-full mx-auto px-6 relative z-10">
+        <div class="cyber-card p-10 rounded-lg border-t-4 border-t-cyan-500">
+            <div class="text-center mb-10">
+                <div class="inline-block p-3 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-4">
+                    <svg class="w-8 h-8 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-extrabold tracking-tighter neon-text uppercase">Secure Access</h2>
+                <p class="text-cyan-600 text-[10px] uppercase tracking-[0.3em] mt-2">Officer Portal Identification</p>
             </div>
-            <h1 class="text-3xl font-extrabold uppercase tracking-widest neon-text mb-2">Internal Access</h1>
-            <p class="text-cyan-400/60 text-sm">Authorized Personnel Only</p>
-        </div>
 
-        {% if error %}
-        <div
-            class="max-w-md w-full mb-6 p-4 border border-red-500/50 bg-red-900/20 text-red-400 text-xs rounded uppercase tracking-widest text-center">
-            {{ error }}
-        </div>
-        {% endif %}
+            {% if error %}
+            <div
+                class="bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded text-xs uppercase tracking-widest mb-8 text-center animate-pulse">
+                Verification Failed: {{ error }}
+            </div>
+            {% endif %}
 
-        <div class="cyber-card w-full p-8 rounded-xl relative overflow-hidden max-w-lg">
-            <div class="absolute top-0 right-0 w-10 h-10 border-t border-r border-cyan-500"></div>
-
-            <form action="/officer-login" method="POST" class="space-y-6 max-w-md mx-auto">
+            <form action="/officer-login" method="POST" class="space-y-6">
                 <div>
                     <label for="username"
-                        class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Officer ID /
-                        Credentials</label>
-                    <input type="text" id="username" name="username" required class="cyber-input"
-                        placeholder="ACCESS_KEY_0x...">
+                        class="block text-[10px] font-bold text-cyan-700 uppercase tracking-widest mb-2">Service ID /
+                        Username</label>
+                    <input type="text" id="username" name="username" required placeholder="OFFICER_HANDLE"
+                        class="cyber-input">
                 </div>
+
                 <div>
                     <label for="password"
-                        class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Biometric
-                        Passcode</label>
-                    <input type="password" id="password" name="password" required class="cyber-input"
-                        placeholder="••••••••">
+                        class="block text-[10px] font-bold text-cyan-700 uppercase tracking-widest mb-2">Security
+                        Credential</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••"
+                        class="cyber-input">
                 </div>
 
-                <div class="flex items-center justify-between text-xs text-cyan-500">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" class="accent-cyan-500">
-                        <span>Remember Node</span>
-                    </label>
-                    <a href="#" class="hover:text-white transition">Forgot access?</a>
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full py-4 rounded-md cyber-button font-bold uppercase tracking-[0.2em] text-sm">
+                        Establish Connection
+                    </button>
                 </div>
-
-                <button type="submit" class="cyber-button w-full py-4 font-bold uppercase tracking-widest rounded-md">
-                    Authorize Session →
-                </button>
             </form>
-        </div>
 
-        <p class="mt-8 text-center text-[10px] text-cyan-900 uppercase tracking-widest">
-            All login attempts are logged by the central matrix.
-        </p>
+            <div class="mt-10 pt-6 border-t border-cyan-900/30">
+                <p class="text-[9px] text-cyan-900 text-center leading-relaxed uppercase tracking-widest">
+                    Authorized Personnel Only. All login attempts are logged by the central matrix. Level 4 Encryption
+                    Active.
+                </p>
+            </div>
+        </div>
     </div>
-</main>
+</section>
 {% endblock %}

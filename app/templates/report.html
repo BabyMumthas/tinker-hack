@@ -1,136 +1,169 @@
 {% extends "base.html" %}
 
-{% block title %}Report Case — Missing Person AI{% endblock %}
+{% block title %}Report Missing Person - National Missing Person Support System{% endblock %}
 
 {% block content %}
-<main class="py-20">
-    <div class="w-full mx-auto px-6">
-        <div class="mb-12 text-center w-full">
-            <h1 class="text-4xl font-extrabold uppercase tracking-widest neon-text mb-4">Report Missing Person</h1>
-            <p class="text-cyan-400/60 w-full mx-auto italic">Please provide accurate information to assist in the
-                identification process.</p>
+<section class="py-12 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-extrabold tracking-tighter neon-text uppercase mb-2">Report Case Node</h2>
+            <p class="text-cyan-500/70 text-sm tracking-widest uppercase">Secure Identification & AI Data Entry</p>
         </div>
 
-        <div class="cyber-card w-full mx-auto p-10 rounded-xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-20 h-[1px] bg-cyan-500"></div>
-            <div class="absolute top-0 left-0 w-[1px] h-20 bg-cyan-500"></div>
-
-            <form action="/report" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form action="/report" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <!-- SECTION 1: MISSING PERSON DETAILS -->
+            <div class="cyber-card p-10 rounded-lg border-l-4 border-l-cyan-500">
+                <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+                    <span
+                        class="w-8 h-8 rounded bg-cyan-500/10 border border-cyan-500 flex items-center justify-center text-xs">01</span>
+                    Subject Parameters
+                </h3>
                 <div class="grid md:grid-cols-2 gap-8">
-                    <!-- SECTION 1: MISSING PERSON DETAILS -->
                     <div class="md:col-span-2">
-                        <label class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Subject
-                            Full Name *</label>
-                        <input type="text" name="missing_full_name" required class="cyber-input"
-                            placeholder="REQUIRED IDENTIFIER">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Full Name
+                            Identification</label>
+                        <input type="text" name="missing_full_name" required placeholder="ENTER LEGAL NAME"
+                            class="cyber-input">
                     </div>
-
                     <div>
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Gender</label>
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Gender
+                            Class</label>
                         <select name="gender" class="cyber-input">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            <option value="Male">MALE</option>
+                            <option value="Female">FEMALE</option>
+                            <option value="Other">OTHER / UNKNOWN</option>
                         </select>
                     </div>
-
                     <div>
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Approximate
-                            Age</label>
-                        <input type="number" name="age" class="cyber-input" placeholder="e.g. 24">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Estimated
+                            Chrono-Age</label>
+                        <input type="number" name="age" placeholder="AGE" class="cyber-input">
                     </div>
-
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">State
-                            Missing From</label>
-                        <input type="text" name="missing_state" class="cyber-input" placeholder="STATE/REGION">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">State
+                            Sector</label>
+                        <input type="text" name="missing_state" placeholder="SECTOR" class="cyber-input">
                     </div>
-
                     <div>
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">City/Location</label>
-                        <input type="text" name="missing_city" class="cyber-input"
-                            placeholder="GEO-COORDINATES OR ADDRESS">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">City /
+                            Zone</label>
+                        <input type="text" name="missing_city" placeholder="ZONE" class="cyber-input">
                     </div>
-
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Date
-                            Missing</label>
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Missing
+                            Date</label>
                         <input type="date" name="missing_date" class="cyber-input">
                     </div>
-
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">PIN
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Missing
+                            Time</label>
+                        <input type="time" name="missing_time" class="cyber-input">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Geo-PIN
                             Code</label>
-                        <input type="text" name="pin_code" class="cyber-input" placeholder="POSTAL CODE">
+                        <input type="text" name="pin_code" placeholder="PIN" class="cyber-input">
                     </div>
-
                     <div class="md:col-span-2">
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Description
-                            / Physical Identification Marks</label>
-                        <textarea name="description" rows="3" class="cyber-input"
-                            placeholder="CONTEXTUAL DATA..."></textarea>
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Descriptive
+                            Analysis / Physical Marks</label>
+                        <textarea name="description" rows="3" placeholder="PROVIDE DISTINCT MARKINGS..."
+                            class="cyber-input"></textarea>
                     </div>
                 </div>
+            </div>
 
-                <!-- SECTION 2: PHOTO -->
-                <div class="border-2 border-dashed border-cyan-900/40 rounded-lg p-12 text-center hover:border-cyan-500 transition cursor-pointer bg-black/20"
-                    onclick="document.getElementById('fileInput').click()">
-                    <div class="text-4xl mb-4">📸</div>
-                    <p class="text-sm font-bold uppercase tracking-widest text-cyan-500">Upload Visual Reference for
-                        Embedding</p>
-                    <p class="text-[10px] text-cyan-700 mt-2">Accepted formats: JPG, PNG, WEBP (Min 512px)</p>
-                    <input type="file" id="fileInput" name="missing_image" required class="hidden" accept="image/*"
-                        onchange="previewImage(event)">
+            <!-- SECTION 2: PHOTO -->
+            <div class="cyber-card p-10 rounded-lg border-l-4 border-l-cyan-600">
+                <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+                    <span
+                        class="w-8 h-8 rounded bg-cyan-500/10 border border-cyan-500 flex items-center justify-center text-xs">02</span>
+                    Biometric Capture (Required)
+                </h3>
+                <div class="relative group">
+                    <div
+                        class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200">
+                    </div>
+                    <div class="relative flex flex-col items-center justify-center border-2 border-dashed border-cyan-900/50 rounded-lg p-12 hover:border-cyan-400 transition cursor-pointer bg-black/40"
+                        onclick="document.getElementById('fileInput').click()">
+                        <svg class="w-16 h-16 text-cyan-500 mb-4 animate-pulse" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        <p class="text-sm text-cyan-400 font-bold uppercase tracking-widest">Upload Facial Intelligence
+                        </p>
+                        <p class="text-[10px] text-cyan-900 mt-2 uppercase">PNG, JPG, OR JPEG ONLY • CLEAR VIEW REQUIRED
+                        </p>
+                        <input type="file" id="fileInput" name="missing_image" required class="hidden" accept="image/*"
+                            onchange="previewImage(event)">
+                    </div>
                 </div>
-
-                <div id="imagePreview" class="mt-6 hidden flex flex-col items-center">
-                    <p class="text-[10px] font-bold text-cyan-700 uppercase mb-2 tracking-widest">Selected Photo
-                        Preview:</p>
+                <div id="imagePreview" class="mt-8 hidden">
+                    <p class="text-xs font-bold text-cyan-700 uppercase mb-4 tracking-tighter">Rendered Preview:</p>
                     <img src="#" id="pImg"
-                        class="w-32 h-32 object-cover rounded-md border border-cyan-500 shadow-[0_0_10px_rgba(0,242,255,0.3)]">
+                        class="w-48 h-48 object-cover rounded-md border border-cyan-500 shadow-[0_0_15px_rgba(0,242,255,0.2)]"
+                        alt="Preview">
                 </div>
+            </div>
 
-                <!-- SECTION 3: COMPLAINANT DETAILS -->
-                <div class="grid md:grid-cols-2 gap-8 pt-8 border-t border-cyan-900/30">
+            <!-- SECTION 3: COMPLAINANT DETAILS -->
+            <div class="cyber-card p-10 rounded-lg border-l-4 border-l-cyan-700">
+                <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+                    <span
+                        class="w-8 h-8 rounded bg-cyan-500/10 border border-cyan-500 flex items-center justify-center text-xs">03</span>
+                    Complainant Credentials
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
                     <div>
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">Complainant
-                            Name *</label>
-                        <input type="text" name="complainant_name" required class="cyber-input"
-                            placeholder="REPORTING AUTH">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Complainant
+                            Name</label>
+                        <input type="text" name="complainant_name" required placeholder="REPORTER NAME"
+                            class="cyber-input">
                     </div>
                     <div>
-                        <label
-                            class="block text-[10px] uppercase tracking-widest font-bold text-cyan-600 mb-2">WhatsApp/Phone
-                            Number *</label>
-                        <input type="tel" name="complainant_phone" required placeholder="+91..." class="cyber-input">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Relation to
+                            Subject</label>
+                        <input type="text" name="relationship" placeholder="RELATION" class="cyber-input">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Auth Contact
+                            Number</label>
+                        <input type="tel" name="complainant_phone" required placeholder="+91 XXXXXXXXXX"
+                            class="cyber-input">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-cyan-600 uppercase tracking-widest mb-2">Primary
+                            Residence Address</label>
+                        <textarea name="address_line1" rows="2" placeholder="FULL STREET ADDRESS..."
+                            class="cyber-input"></textarea>
                     </div>
                 </div>
+            </div>
 
+            <div class="pt-6">
                 <button type="submit"
-                    class="cyber-button w-full py-4 font-bold uppercase tracking-widest rounded-md mt-4">
-                    Submit Final Report →
+                    class="w-full py-5 rounded-md cyber-button font-bold text-lg uppercase tracking-[0.3em]">
+                    Initialize Report Search
                 </button>
-            </form>
-        </div>
+                <p class="mt-4 text-center text-xs text-cyan-900 uppercase tracking-widest">
+                    Encryption Level 4 Active • Data will be logged in Central Matrix
+                </p>
+            </div>
+        </form>
     </div>
-</main>
+</section>
 
 <script>
     function previewImage(event) {
-        const input = event.target;
         const reader = new FileReader();
         reader.onload = function () {
-            const preview = document.getElementById('imagePreview');
-            const pImg = document.getElementById('pImg');
-            pImg.src = reader.result;
-            preview.classList.remove('hidden');
+            const output = document.getElementById('pImg');
+            output.src = reader.result;
+            document.getElementById('imagePreview').classList.remove('hidden');
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
     }
 </script>
 {% endblock %}
