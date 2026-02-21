@@ -24,7 +24,7 @@ def save_case(data: dict, image_file):
     try:
         from deepface import DeepFace  # lazy import to avoid blocking server startup
 
-        _detectors = ["ssd", "opencv", "retinaface"]
+        _detectors = ["opencv", "ssd", "retinaface"]
         _embedding = None
 
         for _backend in _detectors:

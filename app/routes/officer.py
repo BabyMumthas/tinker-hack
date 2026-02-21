@@ -101,16 +101,11 @@ async def scan_frame(request: Request):
         # Lazy-import DeepFace (TF takes a moment to load)
         from deepface import DeepFace
 
-        # Upscale for better SSD detection at normal distances
-        h, w  = frame.shape[:2]
-        frame = cv2.resize(frame, (int(w * 1.5), int(h * 1.5)),
-                           interpolation=cv2.INTER_LINEAR)
-
         # Extract probe embedding
         rep       = DeepFace.represent(
             img_path=frame,
             model_name="ArcFace",
-            detector_backend="ssd",
+            detector_backend="opencv",
             align=True,
             enforce_detection=True,
         )
@@ -131,7 +126,7 @@ async def scan_frame(request: Request):
 
         # Compare against every case
         results = []
-        THRESHOLD = 0.55
+        THRESHOLD = 0.68
         for case in cases:
             try:
                 stored_emb = np.array(json.loads(case["embedding"]))

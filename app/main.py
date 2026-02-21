@@ -1,7 +1,15 @@
 import os
 import sys
+import site
 
+# Ensure our app is in sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+# Enable user-site packages (important for mediapipe installed with --user)
+if os.name == 'nt':
+    user_site = site.getusersitepackages()
+    if user_site and os.path.exists(user_site) and user_site not in sys.path:
+        sys.path.append(user_site)
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles

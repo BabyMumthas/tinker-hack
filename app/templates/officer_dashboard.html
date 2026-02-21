@@ -2,97 +2,203 @@
 
 {% block title %}Officer Dashboard - National Missing Person Support System{% endblock %}
 
+{% block extra_head %}
+<!-- Icons (Heroicons via CDN for simplicity) -->
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style>
+    .sidebar-link.active {
+        background-color: #1e3a8a;
+        /* blue-900 */
+        color: white;
+    }
+
+    .view-section {
+        display: none;
+    }
+
+    .view-section.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="py-12">
-    <div class="max-w-7xl mx-auto px-6">
-        <h2 class="heading-font text-3xl font-bold text-blue-900 mb-8">Officer Dashboard</h2>
+<div class="flex min-h-[calc(100vh-72px)] bg-gray-50">
 
-        <div class="grid lg:grid-cols-2 gap-12">
+    <!-- SIDEBAR -->
+    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col shadow-sm shrink-0">
+        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+            <h2 class="heading-font text-xl font-bold text-blue-900">Officer Dashboard</h2>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest mt-1 font-semibold">Authorized Personnel Only
+            </p>
+        </div>
 
-            <!-- LEFT: AI FACE SCAN -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="heading-font text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                    <span
-                        class="w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
-                    Live AI Search (Face Comparison)
-                </h3>
+        <nav class="flex-grow p-4 space-y-2">
+            <button onclick="switchView('ai-search')" id="nav-ai-search"
+                class="sidebar-link active w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200">
+                <i class="ph ph-mask-happy text-lg"></i>
+                <span class="flex-grow text-left">Live AI Search</span>
+                <i class="ph ph-caret-right text-xs opacity-50"></i>
+            </button>
 
-                <div class="relative bg-black rounded-lg overflow-hidden aspect-video mb-6">
-                    <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
-                    <canvas id="canvas" class="hidden"></canvas>
-                    <div id="scanOverlay"
-                        class="absolute inset-0 border-2 border-blue-500 opacity-30 pointer-events-none hidden"></div>
+            <button onclick="switchView('recent-cases')" id="nav-recent-cases"
+                class="sidebar-link w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200">
+                <i class="ph ph-folders text-lg"></i>
+                <span class="flex-grow text-left">Recent Reported Cases</span>
+                <i class="ph ph-caret-right text-xs opacity-50"></i>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <div class="bg-blue-50 rounded-xl p-4">
+                <p class="text-xs text-blue-800 font-semibold mb-1">Status: Active</p>
+                <p class="text-[10px] text-blue-600 leading-relaxed">System is encrypted and monitored for audit
+                    logging.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow p-8 overflow-y-auto">
+
+        <!-- VIEW: LIVE AI SEARCH -->
+        <div id="view-ai-search" class="view-section active max-w-4xl mx-auto space-y-6">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <h3 class="heading-font text-2xl font-bold text-gray-900">Live AI Search</h3>
+                    <p class="text-sm text-gray-500">Real-time facial comparison against missing person database.</p>
                 </div>
-
-                <div class="flex space-x-4 mb-6">
-                    <button id="startBtn"
-                        class="bg-blue-900 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-800 transition">
-                        Start Camera
-                    </button>
-                    <button id="scanBtn"
-                        class="bg-green-600 text-white px-6 py-2 rounded-md font-medium hover:bg-green-500 transition hidden">
-                        Scan Face
-                    </button>
-                </div>
-
-                <div id="scanResult" class="hidden space-y-4">
-                    <h4 class="font-semibold text-gray-700">Scan Results:</h4>
-                    <div id="resultContent" class="text-sm"></div>
+                <div
+                    class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center">
+                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span> Encoder Online
                 </div>
             </div>
 
-            <!-- RIGHT: RECENT CASES -->
-            <div class="bg-white rounded-lg shadow-md p-8">
-                <h3 class="heading-font text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                    <span
-                        class="w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center mr-3 text-sm">02</span>
-                    Recent Reported Cases
-                </h3>
+            <div class="bg-white rounded-3xl shadow-xl shadow-blue-900/5 overflow-hidden border border-gray-100 p-8">
+                <div
+                    class="relative bg-slate-900 rounded-2xl overflow-hidden aspect-video shadow-inner mb-8 ring-8 ring-gray-50">
+                    <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
+                    <canvas id="canvas" class="hidden"></canvas>
+                    <div id="scanOverlay"
+                        class="absolute inset-0 border-2 border-blue-500 opacity-20 pointer-events-none hidden"></div>
+                </div>
 
-                <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-4">
+                        <button id="startBtn"
+                            class="flex items-center space-x-2 bg-blue-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-blue-900/20">
+                            <i class="ph ph-video-camera-bold"></i>
+                            <span>Start Camera</span>
+                        </button>
+                        <button id="scanBtn"
+                            class="flex items-center space-x-2 bg-green-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-green-500 transition hidden transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-green-600/20">
+                            <i class="ph ph-scan-bold"></i>
+                            <span>Scan Face</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SCAN RESULTS PANEL -->
+                <div id="scanResult"
+                    class="hidden mt-10 pt-8 border-t border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div class="flex items-center justify-between mb-6">
+                        <h4 class="font-bold text-gray-800 text-lg flex items-center">
+                            <i class="ph ph-presentation-chart-bold mr-2 text-blue-600"></i> Analysis Results
+                        </h4>
+                    </div>
+                    <div id="resultContent" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: RECENT CASES -->
+        <div id="view-recent-cases" class="view-section max-w-5xl mx-auto space-y-6">
+            <div class="flex justify-between items-end mb-4">
+                <div>
+                    <h3 class="heading-font text-2xl font-bold text-gray-900">Recent Reported Cases</h3>
+                    <p class="text-sm text-gray-500">Managing and reviewing active search investigations.</p>
+                </div>
+                <a href="/report"
+                    class="bg-blue-900 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-800 transition flex items-center">
+                    <i class="ph ph-plus-circle mr-2"></i> File New Report
+                </a>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl shadow-blue-900/5 overflow-hidden border border-gray-100">
+                <div class="p-0">
                     {% if cases %}
-                    <div class="divide-y divide-gray-100">
+                    <div class="divide-y divide-gray-50 overflow-hidden">
                         {% for case in cases %}
-                        <div class="py-4 flex items-start space-x-4">
-                            <img src="/uploads/{{ case.image_path }}"
-                                class="w-16 h-16 object-cover rounded-md flex-shrink-0 bg-gray-100"
-                                alt="Missing Person">
+                        <div class="p-6 hover:bg-gray-50/80 transition-colors flex items-center space-x-6">
+                            <div class="shrink-0 relative">
+                                <img src="/uploads/{{ case.image_path }}"
+                                    class="w-20 h-20 object-cover rounded-2xl shadow-sm bg-gray-100 ring-4 ring-white"
+                                    alt="Missing Person">
+                                <span class="absolute -top-1 -right-1 w-4 h-4 
+                                    {% if case.status == 'Pending' %}bg-yellow-500
+                                    {% elif case.status == 'Found' %}bg-green-500
+                                    {% else %}bg-gray-400{% endif %} 
+                                    rounded-full border-2 border-white shadow-sm ring-2 ring-white"></span>
+                            </div>
+
                             <div class="flex-grow">
-                                <h4 class="font-bold text-gray-900">{{ case.missing_full_name }}</h4>
-                                <p class="text-xs text-gray-500">{{ case.missing_city }}, {{ case.missing_state }} |
-                                    Age: {{ case.age }}</p>
-                                <div class="mt-2 flex items-center">
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase 
-                                            {% if case.status == 'Pending' %}bg-yellow-100 text-yellow-800
-                                            {% elif case.status == 'Found' %}bg-green-100 text-green-800
-                                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                <div class="flex items-center justify-between mb-1">
+                                    <h4 class="font-bold text-gray-900 text-lg">{{ case.missing_full_name }}</h4>
+                                    <span class="text-[10px] text-gray-400 font-mono">{{ case.created_at }}</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-medium">
+                                    <i class="ph ph-map-pin mr-1"></i> {{ case.missing_city }}, {{ case.missing_state }}
+                                    <span class="mx-2 opacity-30">|</span>
+                                    <i class="ph ph-user mr-1"></i> Age: {{ case.age }}
+                                </p>
+
+                                <div class="mt-4 flex items-center space-x-4">
+                                    <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-gray-100
+                                            {% if case.status == 'Pending' %}bg-yellow-50 text-yellow-700
+                                            {% elif case.status == 'Found' %}bg-green-50 text-green-700
+                                            {% else %}bg-gray-50 text-gray-600{% endif %}">
                                         {{ case.status }}
                                     </span>
                                     <a href="/case/{{ case.id }}/comments"
-                                        class="ml-4 text-xs text-blue-600 hover:underline">View Details</a>
+                                        class="text-xs font-bold text-blue-700 hover:text-blue-900 flex items-center group">
+                                        View Case Details
+                                        <i
+                                            class="ph ph-arrow-right ml-1 transition-transform group-hover:translate-x-1"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <p class="text-gray-500 italic text-sm text-center py-10">No registered cases in the database yet.
-                    </p>
+                    <div class="py-20 text-center">
+                        <i class="ph ph-file-search text-5xl text-gray-200 mb-4"></i>
+                        <p class="text-gray-400 italic font-medium">No registered cases in the database yet.</p>
+                        <a href="/report"
+                            class="inline-block mt-4 text-sm font-bold text-blue-800 hover:underline">Click here to
+                            register the first case</a>
+                    </div>
                     {% endif %}
                 </div>
-
-                <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                    <a href="/report" class="text-blue-700 text-sm font-semibold hover:underline">
-                        File New Report &rarr;
-                    </a>
-                </div>
             </div>
-
         </div>
-    </div>
-</section>
+
+    </main>
+</div>
 
 <script>
+    // VIEW SWITCHER LOGIC
+    function switchView(viewId) {
+        // Toggle visibility
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(`view-${viewId}`).classList.add('active');
+
+        // Toggle nav UI
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(`nav-${viewId}`).classList.add('active');
+    }
+
+    // EXISTING WEBCAM & SCAN LOGIC
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('canvas');
     const startBtn = document.getElementById('startBtn');
@@ -113,7 +219,8 @@
 
     scanBtn.onclick = async () => {
         scanBtn.disabled = true;
-        scanBtn.innerText = "Processing...";
+        const originalText = scanBtn.innerHTML;
+        scanBtn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> <span>Processing...</span>';
 
         // Capture frame
         canvas.width = video.videoWidth;
@@ -131,43 +238,59 @@
 
             resultDiv.classList.remove('hidden');
 
-            // Guard: show HTTP-level errors before trying to parse JSON
             if (!resp.ok) {
-                resultContent.innerHTML = `<p class="text-red-600 font-medium">Server error: HTTP ${resp.status} — are you logged in?</p>`;
+                resultContent.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl flex items-center">
+                    <i class="ph ph-warning-circle text-xl mr-3"></i>
+                    <p class="font-medium">Server error: HTTP ${resp.status} — session expired?</p>
+                </div>`;
                 return;
             }
 
             const data = await resp.json();
 
             if (data.error) {
-                resultContent.innerHTML = `<p class="text-red-600 font-medium">${data.error}</p>`;
+                resultContent.innerHTML = `<div class="p-4 bg-amber-50 text-amber-700 rounded-xl flex items-center">
+                    <i class="ph ph-warning text-xl mr-3"></i>
+                    <p class="font-medium">${data.error}</p>
+                </div>`;
             } else if (data.results && data.results.length > 0) {
-                let html = '<ul class="divide-y divide-gray-100">';
+                let html = '<div class="space-y-3">';
                 data.results.forEach(m => {
-                    const color = m.matched ? 'text-green-600' : 'text-gray-500';
-                    const badge = m.matched
-                        ? '<span class="ml-2 bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full uppercase font-bold">Match</span>'
-                        : '';
+                    const isMatch = m.matched;
+                    const color = isMatch ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100';
+                    const titleColor = isMatch ? 'text-green-900' : 'text-gray-700';
+                    const icon = isMatch ? 'ph-check-circle-fill text-green-600' : 'ph-user-focus text-gray-400';
+
                     html += `
-                        <li class="py-3 flex justify-between items-center">
-                            <div>
-                                <span class="font-semibold text-gray-800">${m.name}</span>
-                                ${badge}
+                        <div class="p-4 rounded-2xl border ${color} transition-all hover:shadow-md flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+                                    <i class="ph ${icon} text-2xl"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold ${titleColor} text-base">${m.name}</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-gray-400">Similarity Match</span>
+                                </div>
                             </div>
-                            <div class="${color} font-mono text-xs">Distance: ${m.distance}</div>
-                        </li>`;
+                            <div class="text-right">
+                                <div class="text-sm font-mono font-bold ${isMatch ? 'text-green-700' : 'text-gray-500'}">
+                                    Dist: ${m.distance}
+                                </div>
+                                <div class="text-[9px] uppercase font-bold text-gray-400">Cosine Metric</div>
+                            </div>
+                        </div>`;
                 });
-                html += '</ul>';
+                html += '</div>';
                 resultContent.innerHTML = html;
             } else {
-                resultContent.innerHTML = '<p class="text-gray-500">No matches found.</p>';
+                resultContent.innerHTML = '<div class="p-10 text-center"><p class="text-gray-400 font-medium">No system matches found.</p></div>';
             }
         } catch (err) {
             resultDiv.classList.remove('hidden');
-            resultContent.innerHTML = `<p class="text-red-600">Request Error: ${err.message || err}</p>`;
+            resultContent.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl"><p class="font-medium">Request Error: ${err.message || err}</p></div>`;
         } finally {
             scanBtn.disabled = false;
-            scanBtn.innerText = "Scan Face";
+            scanBtn.innerHTML = originalText;
         }
     };
 </script>
