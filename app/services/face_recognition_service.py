@@ -1,7 +1,6 @@
 import os
 import json
 import numpy as np
-from deepface import DeepFace
 
 MODEL_NAME = "ArcFace"
 DETECTOR_BACKEND = "retinaface"   # more reliable than opencv
@@ -14,6 +13,7 @@ def get_embedding(image_path: str) -> list:
     Extract a face embedding from an image file.
     Returns a flat list of floats, or raises an exception if no face is found.
     """
+    from deepface import DeepFace  # lazy import — avoids blocking startup with TF init
     result = DeepFace.represent(
         img_path=image_path,
         model_name=MODEL_NAME,
@@ -29,6 +29,7 @@ def embedding_from_frame(frame_bgr) -> list:
     """
     Extract a face embedding directly from an OpenCV BGR numpy array.
     """
+    from deepface import DeepFace  # lazy import — avoids blocking startup with TF init
     result = DeepFace.represent(
         img_path=frame_bgr,
         model_name=MODEL_NAME,

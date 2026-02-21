@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}National Missing Person Support System{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="bg-blue-800 text-white w-10 h-10 flex items-center justify-center rounded-md font-semibold">
+                    NM
+                </div>
+                <div>
+                    <h1 class="font-semibold text-lg">National Missing Person</h1>
+                    <p class="text-xs text-gray-500">Support System</p>
+                </div>
+            </a>
+
+            <div class="space-x-8 text-sm font-medium">
+                <a href="/" class="hover:text-blue-700">Home</a>
+                <a href="/report" class="hover:text-blue-700">Report Case</a>
+                {% if request.session.get("officer") %}
+                <a href="/officer-dashboard" class="hover:text-blue-700">Dashboard</a>
+                <a href="/officer-logout" class="hover:text-blue-700">Logout</a>
+                {% else %}
+                <a href="/officer-login" class="hover:text-blue-700">Officer Access</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-blue-900 text-white py-8 text-center text-sm">
+        National Missing Person Support System — Prototype Demonstration
+        <br>
+        Developed for Hackathon Evaluation Purposes
+    </footer>
+
+</body>
+
+</html>

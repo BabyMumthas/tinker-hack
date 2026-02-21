@@ -26,6 +26,7 @@ def init_db():
             missing_city TEXT,
             pin_code TEXT,
             missing_date TEXT,
+            missing_time TEXT,
             description TEXT,
 
             -- Image

@@ -1,6 +1,11 @@
-flask
+fastapi
+uvicorn
+jinja2
+python-multipart
+starlette
 deepface
 tf-keras
 opencv-python
 numpy
 python-dotenv
+itsdangerous

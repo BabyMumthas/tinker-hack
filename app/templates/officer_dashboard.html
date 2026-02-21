@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Officer Dashboard - National Missing Person Support System{% endblock %}
+
+{% block content %}
+<section class="py-12">
+    <div class="max-w-7xl mx-auto px-6">
+        <h2 class="heading-font text-3xl font-bold text-blue-900 mb-8">Officer Dashboard</h2>
+
+        <div class="grid lg:grid-cols-2 gap-12">
+
+            <!-- LEFT: AI FACE SCAN -->
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h3 class="heading-font text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <span
+                        class="w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center mr-3 text-sm">01</span>
+                    Live AI Search (Face Comparison)
+                </h3>
+
+                <div class="relative bg-black rounded-lg overflow-hidden aspect-video mb-6">
+                    <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
+                    <canvas id="canvas" class="hidden"></canvas>
+                    <div id="scanOverlay"
+                        class="absolute inset-0 border-2 border-blue-500 opacity-30 pointer-events-none hidden"></div>
+                </div>
+
+                <div class="flex space-x-4 mb-6">
+                    <button id="startBtn"
+                        class="bg-blue-900 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-800 transition">
+                        Start Camera
+                    </button>
+                    <button id="scanBtn"
+                        class="bg-green-600 text-white px-6 py-2 rounded-md font-medium hover:bg-green-500 transition hidden">
+                        Scan Face
+                    </button>
+                </div>
+
+                <div id="scanResult" class="hidden space-y-4">
+                    <h4 class="font-semibold text-gray-700">Scan Results:</h4>
+                    <div id="resultContent" class="text-sm"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT: RECENT CASES -->
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h3 class="heading-font text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <span
+                        class="w-8 h-8 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center mr-3 text-sm">02</span>
+                    Recent Reported Cases
+                </h3>
+
+                <div class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                    {% if cases %}
+                    <div class="divide-y divide-gray-100">
+                        {% for case in cases %}
+                        <div class="py-4 flex items-start space-x-4">
+                            <img src="/uploads/{{ case.image_path }}"
+                                class="w-16 h-16 object-cover rounded-md flex-shrink-0 bg-gray-100"
+                                alt="Missing Person">
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-gray-900">{{ case.missing_full_name }}</h4>
+                                <p class="text-xs text-gray-500">{{ case.missing_city }}, {{ case.missing_state }} |
+                                    Age: {{ case.age }}</p>
+                                <div class="mt-2 flex items-center">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase 
+                                            {% if case.status == 'Pending' %}bg-yellow-100 text-yellow-800
+                                            {% elif case.status == 'Found' %}bg-green-100 text-green-800
+                                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ case.status }}
+                                    </span>
+                                    <a href="/case/{{ case.id }}/comments"
+                                        class="ml-4 text-xs text-blue-600 hover:underline">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 italic text-sm text-center py-10">No registered cases in the database yet.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                    <a href="/report" class="text-blue-700 text-sm font-semibold hover:underline">
+                        File New Report &rarr;
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const startBtn = document.getElementById('startBtn');
+    const scanBtn = document.getElementById('scanBtn');
+    const resultDiv = document.getElementById('scanResult');
+    const resultContent = document.getElementById('resultContent');
+
+    startBtn.onclick = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            startBtn.classList.add('hidden');
+            scanBtn.classList.remove('hidden');
+        } catch (err) {
+            alert("Could not access webcam: " + err);
+        }
+    };
+
+    scanBtn.onclick = async () => {
+        scanBtn.disabled = true;
+        scanBtn.innerText = "Processing...";
+
+        // Capture frame
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        const b64 = dataUrl.split(',')[1];
+
+        try {
+            const resp = await fetch('/officer/scan-frame', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ frame_b64: b64 })
+            });
+
+            resultDiv.classList.remove('hidden');
+
+            // Guard: show HTTP-level errors before trying to parse JSON
+            if (!resp.ok) {
+                resultContent.innerHTML = `<p class="text-red-600 font-medium">Server error: HTTP ${resp.status} — are you logged in?</p>`;
+                return;
+            }
+
+            const data = await resp.json();
+
+            if (data.error) {
+                resultContent.innerHTML = `<p class="text-red-600 font-medium">${data.error}</p>`;
+            } else if (data.results && data.results.length > 0) {
+                let html = '<ul class="divide-y divide-gray-100">';
+                data.results.forEach(m => {
+                    const color = m.matched ? 'text-green-600' : 'text-gray-500';
+                    const badge = m.matched
+                        ? '<span class="ml-2 bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full uppercase font-bold">Match</span>'
+                        : '';
+                    html += `
+                        <li class="py-3 flex justify-between items-center">
+                            <div>
+                                <span class="font-semibold text-gray-800">${m.name}</span>
+                                ${badge}
+                            </div>
+                            <div class="${color} font-mono text-xs">Distance: ${m.distance}</div>
+                        </li>`;
+                });
+                html += '</ul>';
+                resultContent.innerHTML = html;
+            } else {
+                resultContent.innerHTML = '<p class="text-gray-500">No matches found.</p>';
+            }
+        } catch (err) {
+            resultDiv.classList.remove('hidden');
+            resultContent.innerHTML = `<p class="text-red-600">Request Error: ${err.message || err}</p>`;
+        } finally {
+            scanBtn.disabled = false;
+            scanBtn.innerText = "Scan Face";
+        }
+    };
+</script>
+{% endblock %}
