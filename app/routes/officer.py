@@ -87,8 +87,10 @@ async def officer_dashboard(request: Request):
 # DeepFace scan-frame API
 # ─────────────────────────────────────────────────────────────────────────────
 
+from fastapi import APIRouter, Request, Form, BackgroundTasks
+
 @router.post("/officer/scan-frame")
-async def scan_frame(request: Request):
+async def scan_frame(request: Request, background_tasks: BackgroundTasks):
     if not is_logged_in(request):
         return {"error": "Unauthorised"}
 
@@ -104,11 +106,11 @@ async def scan_frame(request: Request):
         if frame is None:
             return {"error": "Could not decode image frame."}
 
-        # ── Preprocessing (now handled by service) ──────────────────
+        # ── Preprocessing ──────────────────
         from app.services.face_recognition_service import embedding_from_frame, cosine_distance
         
         try:
-            # Service handles BGR to RGB conversion internally
+            print("[DEBUG] Extracting embedding from frame...")
             probe_emb = embedding_from_frame(frame)
         except Exception as e:
             err = str(e)
@@ -116,10 +118,7 @@ async def scan_frame(request: Request):
                 return {"error": "No face detected — ensure good lighting and face the camera."}
             return {"error": f"Recognition error: {err}"}
 
-        # Gender filtering skipped for speed (saves ~3-5 sec per scan)
-        probe_gender = None
-
-        # Load all cases with embeddings from DB
+        # Load cases
         conn   = get_connection()
         cursor = conn.cursor()
         cursor.execute(
@@ -131,94 +130,67 @@ async def scan_frame(request: Request):
         if not cases:
             return {"error": "No registered cases in the database yet."}
 
-        # Compare probe against all cases using centralized service logic
         results = []
         from app.services.face_recognition_service import MATCH_THRESHOLD
         
-        print(f"[DEBUG] Comparing probe against {len(cases)} cases...")
-        
         for case in cases:
             try:
-                # ── Gender Filtering ──
-                case_gender = (case["gender"] or "").lower()
-                gender_match = True
-                
-                if probe_gender and case_gender:
-                    p_gen = probe_gender.lower()
-                    is_male_probe = ('man' in p_gen or 'male' in p_gen)
-                    is_female_probe = ('woman' in p_gen or 'female' in p_gen)
-                    is_male_case = ('male' in case_gender and 'female' not in case_gender)
-                    is_female_case = ('female' in case_gender)
-                    
-                    if (is_male_probe and is_female_case) or (is_female_probe and is_male_case):
-                        gender_match = False
-                
                 stored_emb = np.array(json.loads(case["embedding"]))
-                
-                # Use centralized distance logic
                 dist = cosine_distance(probe_emb, stored_emb)
                 
-                print(f"[DEBUG] Case: {case['missing_full_name']}, Gender: {case_gender}, Distance: {dist:.4f}, GenderMatch: {gender_match}")
-                
-                if not gender_match:
-                    continue
-
-                matched = dist <= MATCH_THRESHOLD
-                results.append({
-                    "case_id":  case["id"],
-                    "name":     case["missing_full_name"],
-                    "distance": round(dist, 4),
-                    "matched":  matched,
-                    "complainant_phone": case["complainant_phone"],
-                    "gender": case["gender"]
-                })
+                # Keep if it's a reasonable match
+                if dist < 0.7:
+                    results.append({
+                        "case_id":  case["id"],
+                        "name":     case["missing_full_name"],
+                        "distance": round(dist, 4),
+                        "matched":  dist <= MATCH_THRESHOLD,
+                        "complainant_phone": case["complainant_phone"],
+                        "gender": case["gender"]
+                    })
             except Exception as e:
-                print(f"[DEBUG] Error matching case {case.get('id')}: {e}")
                 continue
 
         if not results:
-            return {"results": [], "message": "No database records found."}
+            print("[DEBUG] No matches found at all.")
+            return {"results": [], "message": "No matches found."}
 
-        # Filter strictly by distance < 0.6 as requested for display
+        results.sort(key=lambda x: x["distance"])
+        # Display results with dist < 0.6
         filtered_results = [r for r in results if r["distance"] < 0.6]
+        print(f"[DEBUG] Found {len(filtered_results)} matches with distance < 0.6")
         
-        filtered_results.sort(key=lambda x: x["distance"])
+        # WhatsApp Alert Logic (Background Task)
+        # Send to top 2 results regardless of strict MATCH_THRESHOLD if they are < 0.6
+        top_two = results[:2]
+        
+        from app.services.whatsapp_service import send_match_alert
+        import random
 
-        # Auto-send WhatsApp alerts only after SURITY (e.g. 2 consecutive hits)
-        # We use the top match from the filtered list
-        if filtered_results:
-            top = filtered_results[0]
-            if top["matched"]: # Still check against the more conservative MATCH_THRESHOLD for alerts
-                case_id = str(top["case_id"])
+        for match in top_two:
+            # Only alert if it's a "good" match (dist < 0.6) and has a phone number
+            if match["distance"] < 0.6 and match.get("complainant_phone"):
+                SCAN_LOCATION = "Main Terminal - Gate 4 (CCTV-08)"
+                RANDOM_OFFICER = f"{random.randint(7000, 9999)}{random.randint(100000, 999999)}"
                 
-                if not hasattr(router, "_hit_counter"):
-                    router._hit_counter = {}
-
-                router._hit_counter[case_id] = router._hit_counter.get(case_id, 0) + 1
-                print(f"[DEBUG] Match found for {top['name']}! Surity: {router._hit_counter[case_id]}/2")
-                
-                if router._hit_counter[case_id] >= 2:
-                    try:
-                        from app.services.whatsapp_service import send_match_alert
-                        import random
-                        
-                        SCAN_LOCATION = "Main Terminal - Gate 4 (CCTV-08)"
-                        RANDOM_OFFICER = f"{random.randint(7000, 9999)}{random.randint(100000, 999999)}"
-
-                        if top.get("complainant_phone"):
-                            send_match_alert(
-                                complainant_phone=top["complainant_phone"],
-                                missing_name=top["name"],
-                                match_distance=top["distance"],
-                                case_id=top["case_id"],
-                                location=SCAN_LOCATION,
-                                officer_no=RANDOM_OFFICER
-                            )
-                        router._hit_counter[case_id] = 0 # Reset
-                    except Exception as e:
-                        return {"results": filtered_results}
+                print(f"[DEBUG] Queueing alert for {match['name']} (Dist: {match['distance']}) to {match['complainant_phone']}")
+                background_tasks.add_task(
+                    send_match_alert,
+                    complainant_phone=match["complainant_phone"],
+                    missing_name=match["name"],
+                    match_distance=match["distance"],
+                    case_id=match["case_id"],
+                    location=SCAN_LOCATION,
+                    officer_no=RANDOM_OFFICER
+                )
+            else:
+                print(f"[DEBUG] Skipping alert for {match['name']} (Dist: {match['distance']}, HasPhone: {bool(match.get('complainant_phone'))})")
 
         return {"results": filtered_results}
+
+    except Exception as e:
+        print(f"[ERROR] scan_frame: {e}")
+        return {"error": str(e)}
 
     except Exception as e:
         err = str(e)

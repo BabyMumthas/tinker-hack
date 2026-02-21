@@ -2,6 +2,30 @@ import os
 import json
 import cv2
 import numpy as np
+import sys
+
+# Windows isolation fix: If twilio is missing from system path, check User Roaming site-packages
+try:
+    import twilio
+except ImportError:
+    user_site = os.path.expanduser("~") + r"\AppData\Roaming\Python\Python310\site-packages"
+    if user_site not in sys.path:
+        sys.path.append(user_site)
+    try:
+        import twilio
+    except ImportError:
+        # Fallback for other potential python versions if needed
+        pass
+
+# Lazy load DeepFace to keep application startup fast
+_deepface = None
+
+def get_deepface():
+    global _deepface
+    if _deepface is None:
+        from deepface import DeepFace
+        _deepface = DeepFace
+    return _deepface
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 # opencv: ~2-5 sec (fast, good for live scan) | ssd: ~5-10 sec | retinaface: ~15-30 sec (most accurate)
@@ -16,7 +40,7 @@ def get_embedding(image_path: str) -> list:
     Extract a face embedding from an image file.
     Ensures RGB conversion for consistency.
     """
-    from deepface import DeepFace
+    DeepFace = get_deepface()
     
     # Load image and convert to RGB (DeepFace needs RGB for consistent embeddings)
     img = cv2.imread(image_path)
@@ -41,7 +65,7 @@ def embedding_from_frame(frame_bgr) -> list:
     Extract a face embedding directly from an OpenCV BGR numpy array.
     Ensures RGB conversion before passing to DeepFace.
     """
-    from deepface import DeepFace
+    DeepFace = get_deepface()
     
     # CRITICAL: Convert BGR to RGB
     frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)

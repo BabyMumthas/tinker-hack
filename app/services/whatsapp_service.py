@@ -1,5 +1,11 @@
 import os
+import sys
 from dotenv import load_dotenv
+
+# Windows isolation fix: ensure User Roaming site-packages are in path
+user_site = os.path.expanduser("~") + r"\AppData\Roaming\Python\Python310\site-packages"
+if user_site not in sys.path:
+    sys.path.append(user_site)
 
 load_dotenv()
 
@@ -30,7 +36,10 @@ def send_match_alert(
     Returns:
         dict with 'success' bool and 'sid' or 'error' keys.
     """
+    print(f"[WhatsApp] DEBUG: send_match_alert called for {missing_name} to {complainant_phone}")
+    
     if not ACCOUNT_SID or not AUTH_TOKEN:
+        print("[WhatsApp] ERROR: Twilio credentials missing in .env")
         raise EnvironmentError(
             "TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN must be set in .env"
         )
@@ -44,16 +53,19 @@ def send_match_alert(
 
     message_body = (
         f"🚨 *Missing Person Found*\n\n"
-        f"Someone similar to your dear one (*{missing_name}*) "
-        f"has been seen at the location: *{location}*.\n\n"
+        f"Your dear one (*{missing_name}*) is here!\n\n"
+        f"📍 Location: *{location}*\n"
         f"📊 Match confidence: *{similarity_pct}%*\n"
-        f"📞 Kindly call the officer no: *+91 {officer_no}* for more information.\n\n"
+        f"📞 Kindly call the officer at: *+91 {officer_no}* for more information.\n\n"
         f"— National Missing Person Support System"
     )
 
     try:
+        print("[WhatsApp] DEBUG: Importing twilio...")
         from twilio.rest import Client
+        print("[WhatsApp] DEBUG: Initializing Twilio Client...")
         client = Client(ACCOUNT_SID, AUTH_TOKEN)
+        print(f"[WhatsApp] DEBUG: Sending message from {FROM_WHATSAPP} to {to_number}...")
         message = client.messages.create(
             from_=FROM_WHATSAPP,
             to=to_number,
